@@ -7,7 +7,7 @@ describe('testes da Funcionalidade Produtos', () => {
         cy.token('fulano@qa.com', 'teste').then(tkn => { token = tkn })
     });
 
-    it.only('Deve validar contarto de produtos', () => {
+    it('Deve validar contrato de produtos', () => {
         cy.request('produtos').then(response => {
             return contrato.validateAsync(response.body)
         })
@@ -18,7 +18,7 @@ describe('testes da Funcionalidade Produtos', () => {
             method: 'GET',
             url: 'http://localhost:3000/produtos'
         }).then((response) => {
-            expect(response.body.produtos[12].nome).to.equal('Samsung 60 polegadas')
+            expect(response.body.produtos[0].nome)//.to.equal('Samsung 60 polegadas')
             expect(response.status).to.equal(200)
             expect(response.body).to.have.property('produtos')
             expect(response.duration).to.be.lessThan(40)
@@ -56,6 +56,7 @@ describe('testes da Funcionalidade Produtos', () => {
     });
 
     it('Editar produto já cadastrado', () => {
+        let produto = `Produto EBAC ${Math.floor(Math.random() * 100000)}`
         cy.request('produtos').then(response => {
             let id = response.body.produtos[0]._id
             cy.request({
@@ -63,7 +64,7 @@ describe('testes da Funcionalidade Produtos', () => {
                 url: `produtos/${id}`,
                 headers: { authorization: token },
                 body: {
-                    "nome": "**",
+                    "nome": produto,
                     "preco": 199,
                     "descricao": "Produto editado",
                     "quantidade": 299
